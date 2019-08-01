@@ -9,6 +9,10 @@
 </template>
 
 <style lang="scss">
+html {  // rem required
+  font-size: 100px;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -18,6 +22,7 @@
 }
 #nav {
   padding: 30px;
+  font-size: 0.13rem;
   a {
     font-weight: bold;
     color: #2c3e50;

@@ -11,6 +11,7 @@ export default {
       console.log('hello');
     },
   },
+
   render (h) {  //=============== vOn:click={self.hello} 必须放在当前的组件环境下才能生效，如果放在引用的组件中，必须通过props传递，触发响应组件的方法
     let self = this;
     const attr = {
@@ -19,12 +20,12 @@ export default {
     }
 
     return (
-      <div vOn:click={self.hello}>
+      <div class="rem" vOn:click={self.hello}>
         {
           Array.apply(null, { length: 3 }).map(function () {
             return (
               <Anchored {...{ attrs: attr }}>
-                <p>Hello, <span>{ self.message }</span> right? <span domPropsInnerHTML={self.html}>nice!</span></p>
+                <p>Hello, <span>{ self.message }</span> right? <span domPropsInnerHTML={self.html}></span></p>
                 <header slot="header">header</header>
                 <footer slot="footer">footer</footer>
               </Anchored>
@@ -47,6 +48,9 @@ export default {
 </script>
 
 <style lang="scss">
+  .rem {
+    font-size: 0.2rem;
+  }
   .bg {
     background-color: #f5f5f5;
   }
