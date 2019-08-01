@@ -14,7 +14,7 @@
       }
     },
 
-    data() {
+    data () {
       return {
         msg: 678,
       }

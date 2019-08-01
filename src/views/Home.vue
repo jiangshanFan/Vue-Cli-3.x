@@ -7,13 +7,13 @@ import VueClassComponent from '../components/vueClassComponent'
 export default {
   name: 'Home',
   methods: {
-    hello() {
-      console.log('hello');
-    },
+    hello () {
+      console.log('hello')
+    }
   },
 
-  render (h) {  //=============== vOn:click={self.hello} 必须放在当前的组件环境下才能生效，如果放在引用的组件中，必须通过props传递，触发响应组件的方法
-    let self = this;
+  render (h) { // =============== vOn:click={self.hello} 必须放在当前的组件环境下才能生效，如果放在引用的组件中，必须通过props传递，触发响应组件的方法
+    let self = this
     const attr = {
       level: self.level,
       class: 'bg'
@@ -37,7 +37,7 @@ export default {
     )
   },
 
-  data() {
+  data () {
     return {
       level: 1,
       html: 'a rainy day!',
