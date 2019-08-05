@@ -3,5 +3,5 @@ module.exports = {
     '@vue/app',
     "@vue/babel-preset-jsx"
   ],
-  plugins: ["transform-vue-jsx"]
+  plugins: ["@vue/babel-plugin-transform-vue-jsx"]
 }

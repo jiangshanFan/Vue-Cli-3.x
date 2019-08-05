@@ -44,7 +44,7 @@
       alert('greeting: ' + this.msg)
     }
 
-    render (h) {  // ================= Note: syntax is different
+    render (h) {  // ================= Note: syntax is different, h is required
       return (
         <div>
           <label htmlFor="hello">标题：</label>
