@@ -2,7 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
+Vue.use(ElementUI)
 /* eslint-disable */
 //初始化图表
 Vue.prototype.$chartInit = function (chart,source,times,type) {
@@ -89,36 +92,36 @@ Vue.prototype.$chartInit = function (chart,source,times,type) {
     }
 
     /*设定高度和宽度*/
-    let size = {
-      width : 40*ticks.length + 150,
-      height : 40*data.length + 160,
-    };
+    // let size = {
+    //   width : 40*ticks.length + 150,
+    //   height : 40*data.length + 160,
+    // };
 
-    if(type === 0) {
-      size = {
-        width : 120*ticks.length,
-        height : 100*data.length,
-      };
-      if(100*data.length < 200) {
-        size.height = 200;
-      }
-    }
+    // if(type === 0) {
+    //   size = {
+    //     width : 120*ticks.length,
+    //     height : 100*data.length,
+    //   };
+    //   if(100*data.length < 200) {
+    //     size.height = 200;
+    //   }
+    // }
 
-    chart.changeSize(size.width,size.height);
+    // chart.changeSize(size.width,size.height);
     // console.log(size);
 
 
-    //纵轴的range
-    let t = (1 - (size.width - 120) / size.width) /2 ;
-    let rangeY = [0,1-2*t];
+    // //纵轴的range
+    // let t = (1 - (size.width - 120) / size.width) /2 ;
+    // let rangeY = [0,1-2*t];
 
-    if(cha > 90) { //注意区分周日
-      t = (1 - (size.width - 120) / size.width) /14;
-      rangeY = [0,1-2*t];
-    } else if(cha > 630) {
-      t = (1 - (size.width - 120) / size.width) /30;
-      rangeY = [0,1-2*t];
-    }
+    // if(cha > 90) { //注意区分周日
+    //   t = (1 - (size.width - 120) / size.width) /14;
+    //   rangeY = [0,1-2*t];
+    // } else if(cha > 630) {
+    //   t = (1 - (size.width - 120) / size.width) /30;
+    //   rangeY = [0,1-2*t];
+    // }
 
     const defs = {
       range: {
@@ -127,7 +130,7 @@ Vue.prototype.$chartInit = function (chart,source,times,type) {
         max: max,
         ticks:ticks,
         mask: 'MM/DD',
-        range: rangeY,
+        range: 1,
         nice:false,
       },
       nodeName: {
@@ -146,7 +149,7 @@ Vue.prototype.$chartInit = function (chart,source,times,type) {
       },
       grid: null,
       label: {
-        offset: 180, // 设置坐标轴文本 label 距离坐标轴线的距离
+        offset: 0, // 设置坐标轴文本 label 距离坐标轴线的距离
         textStyle: {
           textAlign: 'center', // 文本对齐方向，可取值为： start middle end
           fill: 'red', // 文本的颜色
@@ -161,7 +164,7 @@ Vue.prototype.$chartInit = function (chart,source,times,type) {
     });
     chart.axis('range', {
       label: {
-        offset: 10, // 设置坐标轴文本 label 距离坐标轴线的距离
+        offset: 0, // 设置坐标轴文本 label 距离坐标轴线的距离
         textStyle: {
           textAlign: 'center', // 文本对齐方向，可取值为： start middle end
           fill: '#404040', // 文本的颜色
@@ -243,7 +246,7 @@ Vue.prototype.$chartInit = function (chart,source,times,type) {
 
     chart.coord().transpose().scale(1, -1);
 
-    chart.legend(values[status], {position: "bottom-left", offsetX: 160, marker: 'circle'});
+    chart.legend(values[status], {position: "bottom-left", offsetX: 0, marker: 'circle'});
 
     chart.tooltip({
       triggerOn: 'mousemove', // tooltip 的触发方式，默认为 mousemove
@@ -283,6 +286,20 @@ Vue.prototype.$chartInit = function (chart,source,times,type) {
       }
     });
   }
+};
+
+/*-- 日期和时间戳转换 --*/
+function add0(m){return m<10?'0'+m:m }
+Vue.prototype.$format = function format(shijianchuo)
+{//shijianchuo是整数，否则要parseInt转换
+  var time = new Date(shijianchuo);
+  var y = time.getFullYear();
+  var m = time.getMonth()+1;
+  var d = time.getDate();
+  var h = time.getHours();
+  var mm = time.getMinutes();
+  var s = time.getSeconds();
+  return y+'-'+add0(m)+'-'+add0(d); //+' '+add0(h)+':'+add0(mm)+':'+add0(s)
 };
 
 Vue.config.productionTip = false

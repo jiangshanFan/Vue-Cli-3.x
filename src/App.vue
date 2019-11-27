@@ -2,13 +2,16 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">About</router-link> |
+      <router-link to="/gantte">gantte</router-link>
     </div>
     <router-view/>
   </div>
 </template>
 
 <style lang="scss">
+@import "./css/common.scss";
+
 html {  // rem required
   font-size: 100px;
 }
