@@ -1,0 +1,10 @@
+/* scrollbar */
+*::-webkit-scrollbar {
+  width:8px; height:8px; background:#f5f5f5; border-radius:4px;/*外层轨道*/
+}
+*::-webkit-scrollbar-thumb{
+  display:block; width:4px; margin:0 auto; border-radius: 4px; background:#ccc;visibility:visible;cursor: pointer;/*内层轨道*/
+  &:hover {
+    visibility: visible;
+  }
+}
