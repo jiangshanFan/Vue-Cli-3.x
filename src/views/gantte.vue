@@ -3,6 +3,7 @@
 
     <div class="gantteComponent" style="position:relative;width:600px;margin-left:210px;">
       <!-- 左侧表格 -->
+      <!-- 注意：此处必须使用 height="550"，否则会造成滚动条无法正确显示 -->
       <el-table
         class="gantte_table drag"
         ref="gantte_table"
@@ -110,10 +111,11 @@
         }">
         <el-table-column
           :width="header_width">
-          <template slot="header">
+          <!-- 此处 slot-scope="scope" 必须添加，否则无法渲染顶部数据，具体原因未明 -->
+          <template slot="header" slot-scope="scope">
             <!-- 顶部时间 -->
             <div class="ganteview-toptime">
-              <div 
+              <div
                 class="ganteview-headercell" 
                 v-for="(item,key) in top_time_data" 
                 :title="item.date" 
@@ -128,7 +130,7 @@
 
             <!-- 底部时间 -->
             <div class="ganteview-bottomtime">
-              <div 
+              <div
                 class="ganteview-headercell" 
                 :title="item.title" 
                 v-for="(item) in bottom_time_data" 
@@ -223,33 +225,13 @@ export default {
   props: {
     gantte_data: Object,
   },
+  // 通过监听父组件传递的参数值变化，来动态渲染gantte图表，避免使用mounted中造成无法动态渲染
+  watch: {
+    gantte_data(newValue, oldValue) {
+      this.getList(newValue);
+    }
+  },
   mounted () {
-    
-    /*----------  此处最后的方式就是使用全局状态管理来传递参数，才能避免不必要的一些生命周期问题
-      ----------*/
-    let gantte_data = JSON.parse(JSON.stringify(this.gantte_data));
-    console.log(gantte_data)
-    /** 特别注意： 时间格式必须完全一致，例如 new Date('2018-02-19') 不同于 new Date('2018-2-19'),前者比后者多8个小时 */
-    //进度表数据
-    if (!gantte_data) {
-      gantte_data = {
-        status: 0,
-        msg: [],
-      }
-    }
-    
-    if(gantte_data.status === 1) {
-      this.gTable = gantte_data.msg.items.map(item => {
-        return {...item, minTime: gantte_data.msg.startTime, maxTime: gantte_data.msg.endTime}
-      });
-      // console.log(this.gTable, gantte_data);
-
-      // 设置每一个格子的占用多少毫秒
-      let time = 24 * 60 * 60 * 1000 / this.one_px;
-      this.get_top_time(gantte_data.msg.startTime, gantte_data.msg.endTime, time);
-      this.getSpanArr(this.gTable);
-    }
-
     this.$nextTick(function() {
       let self = this;
       // 间隔拖动条
@@ -275,6 +257,45 @@ export default {
   },
 
   methods: {
+    getList(obj) {
+      /*----------  此处最后的方式就是使用全局状态管理来传递参数，才能避免不必要的一些生命周期问题
+      ----------*/
+      let gantte_data = JSON.parse(JSON.stringify(obj));
+      console.log(gantte_data)
+      /** 特别注意：时间格式必须完全一致，例如 new Date('2018-02-19') 不同于 new Date('2018-2-19'),前者比后者多8个小时 */
+      //进度表数据
+      if (!gantte_data) {
+        gantte_data = {
+          status: 0,
+          msg: [],
+        }
+      }
+      
+      if(gantte_data.status === 1) {
+        this.gTable = gantte_data.msg.items.map(item => {
+          return {...item, minTime: gantte_data.msg.startTime, maxTime: gantte_data.msg.endTime}
+        });
+        // console.log(this.gTable, gantte_data);
+
+        // 设置每一个格子的占用多少毫秒
+        let time = 24 * 60 * 60 * 1000 / this.one_px;
+        // 判断当前子项目中是否有开始时间和结束时间
+        // 如果有，就重新设置 this.header_width = 0;避免再次渲染图表时叠加长度
+        // 如果没有，就需要设置长度为当前gantte图表格的可视长度，并且将header中的内容置空
+        if (gantte_data.msg.startTime && gantte_data.msg.endTime) {
+          this.header_width = 0;
+          this.get_top_time(gantte_data.msg.startTime, gantte_data.msg.endTime, time);
+        } else {
+          this.header_width = 'calc(100% - ' + this.table_width + ')';
+          this.top_time_data = [];
+          this.bottom_time_data = [];
+        }
+        // 每一次重新渲染图表时必须重置 this.spanArr, 否则会叠加之前的结果
+        this.spanArr = [];
+        this.getSpanArr(this.gTable);
+      }
+    },
+
     /**
      * 判断年份是否为润年
      *
@@ -430,6 +451,7 @@ export default {
             i["width1"] = 0;
           }
         }
+        i = {...i, topTime: this.top_time_data, bottomTime: this.bottom_time_data,};
       }
       console.log(gante_data);  
     },
